@@ -1,0 +1,241 @@
+
+<html>
+	<head>
+		<title></title>
+		<script>
+			document.addEventListener('DOMContentLoaded', function() {
+				if (document.documentElement.hasAttribute('lang')) {
+					document.documentElement.dataset.customLang = '';
+				}
+				});
+		</script>
+		<script>
+			window.addEventListener('message', function(event) { 
+				if( !event.data ) {
+					return;
+				}
+
+				let params;
+				try {
+					params = JSON.parse( event.data );
+				}
+				catch {
+					return;
+				}
+				if( !params.subject || params.subject !== 'lti.frameResize' ) {
+					return;
+				}
+
+				const MAX_FRAME_HEIGHT = 10000;
+				if( !params.height || params.height < 1 || params.height > MAX_FRAME_HEIGHT ) {
+					console.warn( 'Invalid height value received, aborting' );
+					return;
+				}
+				const el = document.getElementsByTagName( 'iframe' );
+				for ( let i=0; i < el.length; i++ ) {
+					if( el[i].contentWindow === event.source ) {
+						el[i].style.height = params.height + 'px';
+
+						console.info( 'Setting iFrame height to ' + params.height );
+
+						if( el[i].getAttribute('lockwidth') !== 'true'){
+							el[i].style.width = '100%';
+							console.info( 'Setting iFrame width to 100%' );
+						}
+					}
+				}
+			});
+		</script>
+		<script src="/d2l/common/iframe/iframe-client.js?v=20.26.8.24123"></script>
+		<script src="https://s.brightspace.com/lib/bsi/2026.8.276/unbundled/embeds.js" type="module"></script>
+		<script>
+			document.addEventListener('DOMContentLoaded', function() {
+				window.D2L.EmbedRenderer.renderEmbeds(document.body);
+			});
+		</script>
+		<script src="https://s.brightspace.com/lib/bsi/2026.8.276/unbundled/mathjax.js" type="module"></script>
+		<script>
+			document.addEventListener('DOMContentLoaded', function() {
+				if (document.querySelector('math, .d2l-element, .d2l-cplus-layout') || /\$\$|\\\(|\\\[|\\begin{|\\ref{|\\eqref{/.test(document.body.innerHTML)) {
+					document.querySelectorAll('mspace[linebreak="newline"]').forEach(elm => {
+						elm.setAttribute('style', 'display: block; height: 0.5rem;');
+					});
+
+					document.querySelectorAll('math mmultiscripts > none').forEach(elm => {
+						const mrow = document.createElementNS('http://www.w3.org/1998/Math/MathML', 'mrow');
+						elm.replaceWith(mrow);
+					});
+
+					window.D2L.MathJax.loadMathJax({"renderLatex":true,"outputScale":1.0,"enableMML3Support":false});
+				}
+			});
+		</script>
+		<script src="https://s.brightspace.com/lib/bsi/2026.8.276/unbundled/prism.js" type="module"></script>
+		<script>
+			document.addEventListener('DOMContentLoaded', function() {
+				document.querySelectorAll('.d2l-code').forEach(code => {
+					window.D2L.Prism.formatCodeElement(code);
+				});
+			});
+		</script>
+		<script>
+			document.addEventListener('DOMContentLoaded', async () => {
+				document.querySelectorAll('iframe[src*="quickLink.d2l"][src*="type=lti"]').forEach(iframe => {
+					iframe.style.borderStyle = 'none';
+				});
+			});
+		</script>
+		<script src="https://s.brightspace.com/lib/bsi/2026.8.276/unbundled/context-provider-host-factory.js" type="module"></script>
+		<script>
+			document.addEventListener('DOMContentLoaded', async () => {
+				document.documentElement.setAttribute('data-mathjax-context', '{"renderLatex":true,"outputScale":1.0,"enableMML3Support":false}');
+				window.D2L.ContextProvider.createContextProviderHost();
+			});
+		</script>
+		<script>
+			if (window.frameElement !== null && !document.documentElement.hasAttribute('data-oslo')) {
+				const osloSettings = {"batch":"/d2l/api/oslo/batch?languageId=13","collection":"/d2l/api/oslo/collection?languageId=13","version":"W/\"20.26.8.24123.639099676320089905\""};
+				document.documentElement.setAttribute('data-oslo', JSON.stringify(osloSettings));
+			}
+		</script>
+		<script src="https://s.brightspace.com/lib/bsi/2026.8.276/unbundled/creator.js" type="module"></script>
+		<script>
+			document.addEventListener('DOMContentLoaded', async () => {
+				const activities = [];
+				const practices = [];
+				const allPractices = document.querySelectorAll('.d2l-practice');
+				const elements = document.querySelectorAll('.d2l-element');
+				let layouts = [...document.querySelectorAll('.d2l-cplus-layout')];
+				const tables = document.querySelectorAll('table');
+				const contentStylerStyleLinks = document.querySelectorAll('head > link[href="https://templates.lcs.brightspace.com/lib/assets/css/styles.min.css"]');
+				const contentStylerOverides = document.querySelectorAll('head > link[href^="/d2l/le/contentstyler/"][data-override="override"]');
+
+				layouts = layouts.filter((layout) => layout.closest('.d2l-element.mceNonEditable') === null);
+
+				for (const practice of allPractices) {
+					const activityContainer = practice.hasAttribute('data-d2l-activity-href');
+					if (activityContainer) {
+						activities.push(practice);
+					}
+					else {
+						practices.push(practice);
+					}
+				}
+
+				if (layouts.length > 0) {
+					window.D2L.Creator.convertLayouts(layouts);
+				}
+				if (elements.length > 0) {
+					window.D2L.Creator.convertElements(elements, 22538, '/content/enforced/22538-co_COMP266_R4/', true);
+				}
+				if (activities.length > 0) {
+					window.D2L.Creator.convertPracticeActivities(activities, 22538, '/content/enforced/22538-co_COMP266_R4/');
+				}
+				if (practices.length > 0) {
+					window.D2L.Creator.convertPractices(practices, 22538, '/content/enforced/22538-co_COMP266_R4/');
+				}
+				if (contentStylerStyleLinks.length > 0 && contentStylerOverides.length > 0 && tables.length > 0) {
+					window.D2L.Creator.wrapTables(tables);
+				}
+			});
+		</script>
+		<script>
+			function lti_launch( vars, target ) {
+				var query = '';
+				var new_tab = false;
+
+				for(var key in vars) {
+					if(query.length == 0) {
+						query += '?' + key + '=' + encodeURIComponent(vars[key]);
+					}
+					else {
+						query += '&' + key + '=' + encodeURIComponent(vars[key]);
+					}
+				}
+
+				var url = '/d2l/customization/pearsonlti/22538/Launch' + query;(target == '_blank') ? window.open( url, '_blank' ) : location.replace( url );
+			}
+		</script>
+	</head>
+
+	<body>
+
+		<h1> This page is poorly written</h1>
+
+		<p>
+			There are many things wrong with this page. It's not so bad that it won't work on most browsers, 
+			but it has many things that could be written much better. Your job is to use this code as a starting point and improve it.
+		</p>
+
+		<h2>You could, of course, cheat!</h2>
+
+		<p>
+			There is nothing wrong with using an HTML cleaner such as HTMLTidy, nor in using an accessibility checker 
+			like the W3 site to ensure your code works well. In fact, we would highly recommend that you do this whenever 
+			you create web pages because they help to ensure your code is compatible with standards and accessible to as 
+			many people as possible. Similarly, it makes perfect sense to use a WYSIWYG HTML editor such as Dremweaver or the 
+			open source KompoZer when actually writing web pages.  For the purposes of this exercise, however, you may 
+			learn more effectively if you avoid doing that until you are fairly comfortable that you have made as many 
+			changes as you can with just the aid of references. The main reason we are learning HTML is so that we can write
+			dynamic JavaScript programs that are embedded within and which use and manipulate HTML, CSS and other browser 
+			technologies. If you take short cuts at this point, you will find it <i>much</i> harder later on. Remember, 
+			while marks will be lost if you don't take care to deal with the problems on these pages, the main things 
+			we are looking for relate to your ability to use the technology well and effectively, paying close attention 
+			to the design needs you have already identified
+		</p>
+
+		<h3>Adding links</h3>
+
+		<p>
+			<a href="sample2.html?ou=22538">This is a link to the other page in this badly written pair of pages</a>. 
+			It uses a relative URL to point to a file in the same file system. This is necessary if you are building a site 
+			for portability, so that you can move it from one place (say your local computer) to another (say, your website).
+		</p>
+
+		<p>
+			<a href=http://www.athabascau.ca> And this is a link to Athabasca's main site</a> 
+			It uses an absolute URL that points to a unique web address. When the site moves, it will still point to that same address.
+		</p>
+
+		<h3>Using pictures</h3>
+
+		<p>
+			Pictures are not a part of a web page - the HTML page includes a link that tells the browser to embed the image (if it can)
+			and some extra optional attributes such as its position relative to the text. It is far preferable to use stylesheets for 
+			this kind of formatting, but that's a subject for the next unit.
+		</p>
+
+		<img src="aulogo.gif?ou=22538">
+
+		<h3>Making lists</h3>
+
+		<ul>
+			<li>lists are useful</li>
+			<li> for many things</li>
+			<li> and can be unordered,</li>
+			<li>indented</li>
+				<ol>
+					<li>numbered</li>
+					<li>like this</li>
+				</ol>
+			<li> and more</li>
+		</ul>
+
+		<h3>Making tables</h3>
+
+		<table border=1>
+			<tr>
+				<td>Tables should only be used for tabular data</td>
+				<td>and never for layout</td>
+			</tr>
+			<tr>
+				<td>but many people do</td>
+				<td>use them for layout</td>
+			</tr>
+			<tr>
+				<td colspan=2>It's not good for accessibility. Stylesheets work much better for this</td>
+			</tr>
+		</table>
+
+	</body>
+</html>
