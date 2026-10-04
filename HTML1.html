@@ -1,15 +1,22 @@
 
 <html>
 	<head>
-		<title></title>
+		<title>HTML Sample 1</title>
+
+		<script src="/d2l/common/iframe/iframe-client.js?v=20.26.8.24123"></script>
+		<script src="https://s.brightspace.com/lib/bsi/2026.8.276/unbundled/embeds.js" type="module"></script>
+		<script src="https://s.brightspace.com/lib/bsi/2026.8.276/unbundled/mathjax.js" type="module"></script>
+		<script src="https://s.brightspace.com/lib/bsi/2026.8.276/unbundled/prism.js" type="module"></script>
+		<script src="https://s.brightspace.com/lib/bsi/2026.8.276/unbundled/context-provider-host-factory.js" type="module"></script>
+		<script src="https://s.brightspace.com/lib/bsi/2026.8.276/unbundled/creator.js" type="module"></script>		
+
 		<script>
 			document.addEventListener('DOMContentLoaded', function() {
 				if (document.documentElement.hasAttribute('lang')) {
 					document.documentElement.dataset.customLang = '';
 				}
 				});
-		</script>
-		<script>
+
 			window.addEventListener('message', function(event) { 
 				if( !event.data ) {
 					return;
@@ -45,16 +52,11 @@
 					}
 				}
 			});
-		</script>
-		<script src="/d2l/common/iframe/iframe-client.js?v=20.26.8.24123"></script>
-		<script src="https://s.brightspace.com/lib/bsi/2026.8.276/unbundled/embeds.js" type="module"></script>
-		<script>
+
 			document.addEventListener('DOMContentLoaded', function() {
 				window.D2L.EmbedRenderer.renderEmbeds(document.body);
 			});
-		</script>
-		<script src="https://s.brightspace.com/lib/bsi/2026.8.276/unbundled/mathjax.js" type="module"></script>
-		<script>
+
 			document.addEventListener('DOMContentLoaded', function() {
 				if (document.querySelector('math, .d2l-element, .d2l-cplus-layout') || /\$\$|\\\(|\\\[|\\begin{|\\ref{|\\eqref{/.test(document.body.innerHTML)) {
 					document.querySelectorAll('mspace[linebreak="newline"]').forEach(elm => {
@@ -69,37 +71,29 @@
 					window.D2L.MathJax.loadMathJax({"renderLatex":true,"outputScale":1.0,"enableMML3Support":false});
 				}
 			});
-		</script>
-		<script src="https://s.brightspace.com/lib/bsi/2026.8.276/unbundled/prism.js" type="module"></script>
-		<script>
+
 			document.addEventListener('DOMContentLoaded', function() {
 				document.querySelectorAll('.d2l-code').forEach(code => {
 					window.D2L.Prism.formatCodeElement(code);
 				});
 			});
-		</script>
-		<script>
+
 			document.addEventListener('DOMContentLoaded', async () => {
 				document.querySelectorAll('iframe[src*="quickLink.d2l"][src*="type=lti"]').forEach(iframe => {
 					iframe.style.borderStyle = 'none';
 				});
 			});
-		</script>
-		<script src="https://s.brightspace.com/lib/bsi/2026.8.276/unbundled/context-provider-host-factory.js" type="module"></script>
-		<script>
+
 			document.addEventListener('DOMContentLoaded', async () => {
 				document.documentElement.setAttribute('data-mathjax-context', '{"renderLatex":true,"outputScale":1.0,"enableMML3Support":false}');
 				window.D2L.ContextProvider.createContextProviderHost();
 			});
-		</script>
-		<script>
+
 			if (window.frameElement !== null && !document.documentElement.hasAttribute('data-oslo')) {
 				const osloSettings = {"batch":"/d2l/api/oslo/batch?languageId=13","collection":"/d2l/api/oslo/collection?languageId=13","version":"W/\"20.26.8.24123.639099676320089905\""};
 				document.documentElement.setAttribute('data-oslo', JSON.stringify(osloSettings));
 			}
-		</script>
-		<script src="https://s.brightspace.com/lib/bsi/2026.8.276/unbundled/creator.js" type="module"></script>
-		<script>
+
 			document.addEventListener('DOMContentLoaded', async () => {
 				const activities = [];
 				const practices = [];
@@ -138,8 +132,7 @@
 					window.D2L.Creator.wrapTables(tables);
 				}
 			});
-		</script>
-		<script>
+
 			function lti_launch( vars, target ) {
 				var query = '';
 				var new_tab = false;
@@ -213,17 +206,18 @@
 			<li>lists are useful</li>
 			<li> for many things</li>
 			<li> and can be unordered,</li>
-			<li>indented</li>
+			<li>indented
 				<ol>
 					<li>numbered</li>
 					<li>like this</li>
 				</ol>
+			</li>
 			<li> and more</li>
 		</ul>
 
 		<h3>Making tables</h3>
 
-		<table border=1>
+		<table border="1">
 			<tr>
 				<td>Tables should only be used for tabular data</td>
 				<td>and never for layout</td>
@@ -233,9 +227,11 @@
 				<td>use them for layout</td>
 			</tr>
 			<tr>
-				<td colspan=2>It's not good for accessibility. Stylesheets work much better for this</td>
+				<td colspan="2">It's not good for accessibility. Stylesheets work much better for this</td>
 			</tr>
 		</table>
+
+		<a href="index.html" class="button-link">Return to Main Page</a>
 
 	</body>
 </html>
