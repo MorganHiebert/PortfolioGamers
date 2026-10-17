@@ -9,11 +9,9 @@
     </head>
     <body>
 
-        <header>
+        <header class="top-bar">
             <h1>Portfolio Gamers</h1>
-        </header>
 
-        <main>
             <!-- The button that triggers the sidebar -->
             <button id="open-btn">♡</button>
 
@@ -25,11 +23,30 @@
                 </nav>
             </div>
 
-            <div>
-                <a href="Details.html" class="button-link">My First Game</a>
-                <a href="HTML1.html" class="button-link">HTML Sample One</a>
-                <a href="HTML2.html" class="button-link">HTML Sample Two</a>
+        </header>
+
+        <main>
+
+            <div class="card-grid">
+                <!-- Card 1: My First Game -->
+                <a href="Details.html" class="button-link game-card">
+                    <img src="Images/TillyRed.jpg" alt="My First Game Preview" class="button-image">
+                    <span class="button-text">My First Game</span>
+                </a>
+
+                <!-- Card 2: HTML Sample One -->
+                <a href="HTML1.html" class="button-link game-card">
+                    <img src="Images\sample1ref.png" alt="HTML Sample One Preview" class="button-image">
+                    <span class="button-text">HTML Sample One</span>
+                </a>
+
+                <!-- Card 3: HTML Sample Two -->
+                <a href="HTML2.html" class="button-link game-card">
+                    <img src="Images\sample2ref.png" alt="HTML Sample Two Preview" class="button-image">
+                    <span class="button-text">HTML Sample Two</span>
+                </a>
             </div>
+
         </main>
 
         <script src="script.js" defer></script>
