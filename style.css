@@ -195,6 +195,22 @@ th, td {
     border-radius: 8px;
 }
 
+.dynamic-bg {
+    background-image: var(--bg-image); 
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    min-height: 100vh; 
+}
+
+header.subtitle {
+    text-align: center;
+    font-size: 20px;
+    color: white;
+    margin-top: 10px;
+}
+
 
 /* ==========================================================================
    4. SIDEBAR MENU
