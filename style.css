@@ -217,6 +217,15 @@ th, td {
     text-align: center;
 }
 
+/*search box*/
+#game-search {
+    display: block;
+    width: 100%;
+    max-width: 400px;
+    padding: 10px;
+    margin: 20px 0;
+    box-sizing: border-box;
+}
 
 
 
@@ -259,6 +268,19 @@ th, td {
 .fav-btn.active {
     color: #ff4757; 
     background-color: rgba(255, 255, 255, 0.9); 
+}
+
+/* favourite notification */
+#favorite-notice {
+    display: none;
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    padding: 12px 20px;
+    background: #222;
+    color: white;
+    border-radius: 8px;
+    z-index: 10000;
 }
 
 

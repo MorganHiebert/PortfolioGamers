@@ -1,6 +1,8 @@
-// ==========================================================================
-// 1. SIDEBAR NAVIGATION CONTROLS
-// ==========================================================================
+
+ // ==========================================================================
+ // 1. SIDEBAR NAVIGATION CONTROLS
+ // ==========================================================================
+
 const openBtn = document.getElementById('open-btn');
 const closeBtn = document.getElementById('close-btn');
 const sidebar = document.getElementById('sidebar');
@@ -34,6 +36,7 @@ function toggleForm() {
 // ==========================================================================
 // 2. CHOICE BUTTONS
 // ==========================================================================
+
 document.addEventListener("DOMContentLoaded", () => {
     const choiceButtons = document.querySelectorAll('.choice-btn');
 
@@ -48,7 +51,18 @@ document.addEventListener("DOMContentLoaded", () => {
             localStorage.setItem('myCounter', currentCount);
 
             if (destination) {
-                window.location.href = destination;
+                //JQUERY: Fade out the story before navigating when jQuery is available
+                const story = document.querySelector('.dynamic-bg main');
+
+                if (story && window.jQuery) {
+                    event.preventDefault();
+
+                    $(story).fadeOut(250, function () {
+                        window.location.href = destination;
+                    });
+                } else {
+                    window.location.href = destination;
+                }
             } else {
                 console.error("Error: This button is missing a 'data-route' attribute!");
             }
@@ -60,6 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
 // ==========================================================================
 // 3.SIDEBAR LOGIC
 // ==========================================================================
+
 document.addEventListener("DOMContentLoaded", () => {
     let favorites = JSON.parse(localStorage.getItem('myFavorites')) || [];
     const gameCards = document.querySelectorAll('.game-card');
@@ -104,6 +119,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
             localStorage.setItem('myFavorites', JSON.stringify(favorites));
             updateSidebarFavorites(); // dynamic runtime UI redraw
+
+            // JQUERY: Show a notification when a favourite changes
+            if (window.jQuery) {
+                const message = index > -1
+                    ? 'Removed from favourites.'
+                    : 'Added to favourites!';
+
+                let notice = $('#favorite-notice');
+
+                if (!notice.length) {
+                    notice = $('<div>', {
+                        id: 'favorite-notice',
+                        role: 'status',
+                        'aria-live': 'polite'
+                    }).appendTo('body');
+                }
+
+                notice.stop(true, true)
+                    .text(message)
+                    .fadeIn(200)
+                    .delay(1200)
+                    .fadeOut(300);
+            }
         });
     });
 });
@@ -179,3 +217,85 @@ function animateTrail() {
     requestAnimationFrame(animateTrail);
 }
 animateTrail();
+
+/*
+
+this code creates a trail effect that follows the mouse cursor. 
+It generates a series of div elements that represent the trail particles, 
+and their positions are updated based on the mouse movement. The opacity 
+and size of each particle decrease as they get further from the cursor, 
+creating a fading trail effect.
+
+*/
+
+
+// ==========================================================================
+// JQUERY Stuff
+// ==========================================================================
+
+// JQUERY: Check that jQuery is loaded before using it
+if (window.jQuery) {
+
+    $(document).ready(function () {
+
+        // JQUERY:  Animate the sidebar when opening and closing
+        $('#open-btn').on('click.jquerySidebar', function () {
+            $('#sidebar').stop(true, true).slideDown(300);
+        });
+
+        $('#close-btn').on('click.jquerySidebar', function () {
+            $('#sidebar').stop(true, true).slideUp(300);
+        });
+
+
+        // JQUERY:  Update the appearance of favourite buttons
+        // The original js still manages saved favourites.
+        $('.fav-btn').each(function () {
+            $(this).attr(
+                'aria-pressed',
+                $(this).hasClass('active') ? 'true' : 'false'
+            );
+        });
+
+        $('.fav-btn').on('click.jqueryFavorites', function () {
+            const button = this;
+
+            // Wait until the original favourite handler updates the class.
+            setTimeout(function () {
+                $(button).attr(
+                    'aria-pressed',
+                    $(button).hasClass('active') ? 'true' : 'false'
+                );
+            }, 0);
+        });
+
+
+        // JQUERY: Fade in story content when the page loads
+        $('.dynamic-bg main').stop(true, true).hide().fadeIn(300);
+
+
+        // JQUERY: 4. Add a search box to filter game cards
+        if ($('#game-search').length === 0 && $('.game-card').length > 0) {
+            $('<input>', {
+                id: 'game-search',
+                type: 'search',
+                placeholder: 'Search games...',
+                'aria-label': 'Search games'
+            }).insertBefore($('.game-card').first().parent());
+        }
+
+        $('#game-search').on('input', function () {
+            const query = $(this).val().toLowerCase().trim();
+
+            $('.game-card').each(function () {
+                const title = $(this).find('.button-text')
+                    .text()
+                    .toLowerCase();
+
+                $(this).toggle(title.includes(query));
+            });
+        });
+
+    });
+
+}
