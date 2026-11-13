@@ -221,9 +221,9 @@ th, td {
 #game-search {
     display: block;
     width: 100%;
-    max-width: 400px;
+    max-width: 900px;
     padding: 10px;
-    margin: 20px 0;
+    margin: 0 auto 20px;
     box-sizing: border-box;
 }
 
@@ -406,4 +406,142 @@ header.subtitle {
 
 .btn-dark:hover {
     background-color: #444;
+}
+
+
+
+
+/* ==========================================================================
+   6.) GUESTBOOK SECTION
+   ========================================================================== */
+
+.guestbook-container {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #1a1919;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.guestbook-container h2 {
+    margin-top: 0;
+    border-bottom: 2px solid #fdfbfb;
+    padding-bottom: 10px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: rgb(255, 255, 255);
+}
+
+.form-group input, 
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+#submit-entry-btn {
+    background-color: #431495;
+    color: rgb(255, 255, 255);
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background 0.2s;
+}
+
+#submit-entry-btn:hover {
+    background-color: #555;
+}
+
+#submit-entry-btn:disabled {
+    background-color: #aaa;
+    cursor: not-allowed;
+}
+
+/* entries display feed */
+#guestbook-entries {
+    margin-top: 30px;
+}
+
+.guestbook-card {
+    background: #431495;
+    padding: 15px;
+    border: 1px solid #eee;
+    border-left: 4px solid #ff4d6d; 
+    border-radius: 4px;
+    margin-bottom: 12px;
+}
+
+.entry-author {
+    color: #fafafa;
+}
+
+.entry-message {
+    margin: 5px 0 0 0;
+    color: #ffffff;
+}
+
+
+/* ==========================================================================
+   7.) RATINGS
+   ========================================================================== */
+/* card positioning wrapper */
+.game-card-wrapper {
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+/* interactive widget elements alignment */
+.rating-widget {
+    margin-top: 10px;
+    text-align: center;
+    border-top: 1px solid #eee;
+    padding-top: 10px;
+}
+
+.star-interactive {
+    display: inline-block;
+    cursor: pointer;
+}
+
+.star {
+    font-size: 1.5rem;
+    color: #ccc;
+    transition: color 0.1s ease;
+}
+
+/* color classes applied by jQuery triggers */
+.star:hover,
+.star.hover-active {
+    color: #ffca28; /* Gold shine glow */
+}
+
+.rating-summary {
+    font-size: 0.85rem;
+    color: #666;
+    margin-top: 3px;
+    font-family: sans-serif;
 }

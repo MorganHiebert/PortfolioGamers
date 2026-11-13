@@ -281,13 +281,13 @@ if (window.jQuery) {
                 type: 'search',
                 placeholder: 'Search games...',
                 'aria-label': 'Search games'
-            }).insertBefore($('.game-card').first().parent());
+            }).insertBefore($('.card-grid').first());
         }
 
         $('#game-search').on('input', function () {
             const query = $(this).val().toLowerCase().trim();
 
-            $('.game-card').each(function () {
+            $('.game-card-wrapper').each(function () {
                 const title = $(this).find('.button-text')
                     .text()
                     .toLowerCase();
@@ -299,3 +299,154 @@ if (window.jQuery) {
     });
 
 }
+
+const GUESTBOOK_URL = "https://6aece488fc3b911e6fd5b66d.mockapi.io/guestbook";
+const RATINGS_URL = "https://6aece488fc3b911e6fd5b66d.mockapi.io/ratings";
+
+$(document).ready(function() {
+    
+    // ================= RATINGS ENGINE (AJAX) =================
+    function loadLiveRatings() 
+    {
+        $.ajax(
+        {
+            url: RATINGS_URL,
+            method: 'GET',
+            dataType: 'json',
+            success: function(allVotes) 
+            {
+                // reset math counting dictionary trackers
+                let summaryData = 
+                {
+                    "game-1": { total: 0, count: 0 },
+                    "game-2": { total: 0, count: 0 },
+                    "game-3": { total: 0, count: 0 }
+                };
+
+                // accumulate totals from the external cloud database array
+                allVotes.forEach(function(vote) 
+                {
+                    if (summaryData[vote.gameId]) 
+                        {
+                        summaryData[vote.gameId].total += Number(vote.value);
+                        summaryData[vote.gameId].count += 1;
+                    }
+                });
+
+                // update visual metrics inside each widget card layout box
+                $('.rating-widget').each(function() 
+                {
+                    const gameId = $(this).data('game');
+                    const stats = summaryData[gameId];
+                    const summaryLabel = $(this).find('.rating-summary');
+
+                    if (stats && stats.count > 0) 
+                    {
+                        const scoreAvg = (stats.total / stats.count).toFixed(1);
+                        summaryLabel.text(`⭐ ${scoreAvg}/5 (${stats.count} votes)`);
+                    } 
+                    else 
+                    {
+                        summaryLabel.text("★ No votes cast yet");
+                    }
+                });
+            }
+        });
+    }
+
+    // intercept clicks on structural elements to POST an update to the cloud server
+    $('.star').on('click', function() 
+    {
+        const selectedValue = $(this).data('value');
+        const gameId = $(this).closest('.rating-widget').data('game');
+        const parentWidget = $(this).closest('.rating-widget');
+
+        // visually gray out interaction block to indicate active pipeline transmission
+        parentWidget.css('opacity', '0.5');
+
+        $.ajax(
+        {
+            url: RATINGS_URL,
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ gameId: gameId, value: selectedValue }),
+            success: function() 
+            {
+                loadLiveRatings(); // recompute calculations across nodes immediately
+            },
+            complete: function() 
+            {
+                parentWidget.css('opacity', '1');
+            }
+        });
+    });
+
+    // hover UI indicator effects tracking
+    $('.star').on('mouseenter', function() 
+    {
+        $(this).prevAll().addBack().addClass('hover-active');
+    }).on('mouseleave', function() {
+        $(this).prevAll().addBack().removeClass('hover-active');
+    });
+
+
+    // ================= GUESTBOOK ENGINE (AJAX) =================
+    function loadGuestbook() 
+    {
+        $.ajax(
+        {
+            url: GUESTBOOK_URL,
+            method: 'GET',
+            dataType: 'json',
+            success: function(entries) 
+            {
+                const container = $('#guestbook-entries');
+                container.empty();
+                if(entries.length === 0) 
+                {
+                    container.append('<p>No messages yet.</p>');
+                    return;
+                }
+                entries.reverse().forEach(function(item) 
+                {
+                    container.append(`
+                        <div class="guestbook-card">
+                            <strong> ${escapeHTML(item.username)}</strong>
+                            <p>${escapeHTML(item.message)}</p>
+                        </div>
+                    `);
+                });
+            }
+        });
+    }
+
+    $('#guestbook-form').on('submit', function(e) 
+    {
+        e.preventDefault();
+        const payload = { username: $('#username').val(), message: $('#message').val() };
+        $('#submit-entry-btn').prop('disabled', true).text('Posting...');
+
+        $.ajax(
+        {
+            url: GUESTBOOK_URL,
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(payload),
+            success: function() 
+            {
+                $('#username').val(''); $('#message').val('');
+                loadGuestbook();
+            },
+            complete: function() 
+            {
+                $('#submit-entry-btn').prop('disabled', false).text('Sign Guestbook ');
+            }
+        });
+    });
+
+    function escapeHTML(str) { return $('<div>').text(str).html(); }
+
+    // init loops
+    loadLiveRatings();
+    loadGuestbook();
+});
