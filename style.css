@@ -507,7 +507,7 @@ header.subtitle {
 .game-card-wrapper {
     display: flex;
     flex-direction: column;
-    background: #fff;
+    background: rgb(44, 12, 51);
     border: 1px solid #ddd;
     border-radius: 8px;
     padding: 10px;
